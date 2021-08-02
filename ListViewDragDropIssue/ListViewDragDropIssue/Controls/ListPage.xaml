@@ -1,0 +1,64 @@
+﻿<UserControl
+    x:Class="ListViewDragDropIssue.Controls.ListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ListViewDragDropIssue.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="TestControlTemplate" x:DataType="local:LayoutHelper">
+            <ContentControl 
+                CanDrag="True"
+                DragStarting="UIElement_OnDragStarting">
+                <Grid Width="500">
+                    <Grid
+                        BorderBrush="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                        BorderThickness="0,0,4,0"
+                        Visibility="{x:Bind local:BindConverters.ConvertBoolToVisibility(ShowRightInsertBorder), Mode=OneWay}"/>
+                    <Grid
+                        BorderBrush="{ThemeResource SystemControlAccentAcrylicElementAccentMediumHighBrush}"
+                        BorderThickness="4,0,0,0"
+                        Visibility="{x:Bind local:BindConverters.ConvertBoolToVisibility(ShowLeftInsertBorder), Mode=OneWay}"/>
+                    <ContentPresenter
+                        Content="{x:Bind Path=Control}"
+                        Margin="2"/>
+                </Grid>
+            </ContentControl>
+        </DataTemplate>
+
+        <Style x:Key="NoSelect" TargetType="ListBoxItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border 
+                        Background="Transparent"
+                        x:Name="IconBorder">
+                            <ContentPresenter />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+
+    <Grid>
+        <ListBox
+            ItemContainerStyle="{ThemeResource NoSelect}"
+            ItemsSource="{x:Bind Path=Controls, Mode=OneWay}"
+            ItemTemplate="{StaticResource TestControlTemplate}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel
+                        AllowDrop="True"
+                        DragOver="StackPanel_DragOver"
+                        Drop="StackPanel_Drop"
+                        Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+        </ListBox>
+    </Grid>
+
+</UserControl>
